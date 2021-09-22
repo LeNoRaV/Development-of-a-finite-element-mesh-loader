@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 
-class AneuMeshLoader {
+class AneuMeshLoader : MeshLoader {
 	//AneuMeshLoader();
 	//virtual ~AneuMeshLoader();
 public:
