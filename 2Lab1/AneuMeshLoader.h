@@ -1,9 +1,8 @@
 #pragma once
 #include <iostream>
+#include "MeshLoader"
 
-class AneuMeshLoader : MeshLoader {
-	//AneuMeshLoader();
-	//virtual ~AneuMeshLoader();
+class AneuMeshLoader : public MeshLoader {
 public:
-	void LoadMesh();
+	void LoadMesh(const std::string&) override;
 };

@@ -1,14 +1,19 @@
 #pragma once
 #include <iostream>
+#include <vector>
+#include <string>
+#include "Types.h"
 #include "AneuMeshLoader.h"
 
 class MeshLoader{
 	//MeshLoader();
 	//virtual ~MeshLoader();
 public:
-	virtual void LoadMesh() = 0;
+	virtual void LoadMesh(const std::string&) = 0;
 
-	getSTL(); //методы, позвол€ющие получить STL-контейнеры узлов, конечных элементов и граничных элементов
+	get_node(); //методы, позвол€ющие получить STL-контейнеры узлов, конечных элементов и граничных элементов
+	get_finite_elems();
+	get_boundary();
 	find_el_id(); //метод, позвол€ющий найти  Ё по ID трех его вершинных узлов, дл€ чего использовать алгоритм find_if и создать необходимый предикат.
 	            //ѕредусмотреть возможность наличи€ нескольких  Ё с данными трем€ узлами;
 	find_el_edge(); //метод, позвол€ющий найти  Ё по ребру, заданному с помощью ID двух узлов.
