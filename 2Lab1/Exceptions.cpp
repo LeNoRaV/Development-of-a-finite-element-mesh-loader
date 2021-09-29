@@ -1,3 +1,6 @@
+#include <Exceptions.h>
+#include <string>
+
 FileIsNotFound::FileIsNotFound(const std::string& error) noexcept : error("The file " + error + " is not found ") {}
 const char* FileIsNotFound::what() const noexcept {
 	return error.c_str();
