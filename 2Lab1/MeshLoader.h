@@ -11,13 +11,19 @@ class MeshLoader{
 public:
 	virtual void LoadMesh(const std::string&) = 0;
 
-	get_node(); //методы, позвол€ющие получить STL-контейнеры узлов, конечных элементов и граничных элементов
-	get_finite_elems();
-	get_boundary();
-	find_el_id(); //метод, позвол€ющий найти  Ё по ID трех его вершинных узлов, дл€ чего использовать алгоритм find_if и создать необходимый предикат.
-	            //ѕредусмотреть возможность наличи€ нескольких  Ё с данными трем€ узлами;
-	find_el_edge(); //метод, позвол€ющий найти  Ё по ребру, заданному с помощью ID двух узлов.
-	              //ѕредусмотреть возможность наличи€ нескольких  Ё с данным ребром;
+protected:
+	std::vector<Node> nodes;
+	std::vector<FiniteElement> finite_elems;
+	std::vector<BoundaryFiniteElement> boundary;
+
+public:
+	const std::vector<Node>& get_node() const;
+	const std::vector<FiniteElement>& get_finite_elems() const;
+	const std::vector<BoundaryFiniteElement>& get_boundary() const;
+
+	std::vector<int> find_elem_id(int p_node_id_1, int p_node_id_2, int p_node_id_3) const;
+	std::vector<int> find_elem_edge(int p_node_id1, int p_node_id2) const;
+
 	get_c_node_border(); //метод, возвращающий контейнер граничных узлов по ID границы;
 	get_c_range(); //метод, возвращающий контейнер  Ё с заданным ID области;
 	get_c_ke_border(); //метод, возвращающий контейнер граничных  Ё с заданным ID границы;

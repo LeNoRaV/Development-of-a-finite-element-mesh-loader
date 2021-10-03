@@ -1,5 +1,7 @@
 #pragma once
 #include <iostream>
+#include <vector>
+#include <array>
 
 struct Node {
 	std::array<double, 3> XYZ;
