@@ -2,6 +2,7 @@
 #include <optional>
 #include <array>
 #include <vector>
+#include <iostream>
 
 Node::Node(int p_node_id, const std::array<double, 3>& p_XYZ, bool p_flag)
 	: m_node_id(p_node_id), m_XYZ(p_XYZ), m_flag(p_flag)
@@ -55,23 +56,23 @@ std::ostream& operator<<(std::ostream& p_out, const FiniteElement& p_finite_elem
 {
 	p_out << p_finite_elem.element_id << std::endl << p_finite_elem.material_id << std::endl;
 	p_out << "[ ";
-	for (const auto& node : p_finite_elem.node_id) p_out << node << ", "; //vector
+	for (const auto& node : p_finite_elem.m_node_id) p_out << node << ", "; //vector
 	p_out << "]";
 	return p_out;
 }
 
 BoundaryFiniteElement::BoundaryFiniteElement(int p_element_id, int p_bound_id, const std::vector<int>& p_node_id)
-	: element_id(p_element_id), boundary_id(p_bound_id), node_id(p_node_id)
+	: m_element_id(p_element_id), m_boundary_id(p_bound_id), m_node_id(p_node_id)
 {}
 
 std::istream& operator >> (std::istream& p_in, BoundaryFiniteElement& p_boundary_finite_elem)
 {
-	p_in >> p_boundary_finite_elem.element_id >> p_boundary_finite_elem.boundary_id;
+	p_in >> p_boundary_finite_elem.m_element_id >> p_boundary_finite_elem.m_boundary_id;
 
 	std::optional<bool> local_node_id;  // fill vector in
 	local_node_id = read_node_id(p_in);
 	while (local_node_id) {
-		p_boundary_finite_elem.node_id.push_back(*local_node_id);
+		p_boundary_finite_elem.m_node_id.push_back(*local_node_id);
 		local_node_id = read_node_id(p_in);
 	}
 
@@ -80,9 +81,9 @@ std::istream& operator >> (std::istream& p_in, BoundaryFiniteElement& p_boundary
 
 std::ostream& operator << (std::ostream& p_out, const BoundaryFiniteElement& p_boundary_finite_elem)
 {
-	p_out << p_boundary_finite_elem.element_id << std::endl << p_boundary_finite_elem.boundary_id << std::endl;
+	p_out << p_boundary_finite_elem.m_element_id << std::endl << p_boundary_finite_elem.m_boundary_id << std::endl;
 	p_out << "[ ";
-	for (const auto& node : p_boundary_finite_elem.node_id) p_out << node << ", ";
+	for (const auto& node : p_boundary_finite_elem.m_node_id) p_out << node << ", ";
 	p_out << "]";
 	return p_out;
 }

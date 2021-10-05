@@ -12,9 +12,9 @@ public:
 	virtual void LoadMesh(const std::string&) = 0;
 
 protected:
-	std::vector<Node> nodes;
-	std::vector<FiniteElement> finite_elems;
-	std::vector<BoundaryFiniteElement> boundary;
+	std::vector<Node> m_nodes;
+	std::vector<FiniteElement> m_finite_elems;
+	std::vector<BoundaryFiniteElement> m_boundary;
 
 public:
 	const std::vector<Node>& get_node() const;
