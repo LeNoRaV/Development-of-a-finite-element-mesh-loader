@@ -4,9 +4,9 @@
 #include <array>
 
 struct Node {
-	std::array<double, 3> XYZ;
-	int node_id;
-	bool flag = 0;
+	std::array<double, 3> m_XYZ;
+	int m_node_id;
+	bool m_flag = 0;
 
 	Node(int, const std::array<double, 3>&, bool);
 	Node(const Node&);
@@ -16,9 +16,9 @@ struct Node {
 };
 
 struct FiniteElement {
-	int element_id;
-	int material_id;
-	std::vector<int> node_id;
+	int m_element_id;
+	int m_material_id;
+	std::vector<int> m_node_id;
 
 	FiniteElement(int, int, const std::vector<int>&);
 
@@ -27,9 +27,9 @@ struct FiniteElement {
 };
 
 struct BoundaryFiniteElement {
-	int element_id;
-	int boundary_id;
-	std::vector<int> node_id;
+	int m_element_id;
+	int m_boundary_id;
+	std::vector<int> m_node_id;
 
 	BoundaryFiniteElement(int, int, const std::vector<int>&);
 

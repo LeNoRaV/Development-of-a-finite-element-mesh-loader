@@ -22,7 +22,7 @@ public:
 	const std::vector<BoundaryFiniteElement>& get_boundary() const;
 
 	std::vector<int> find_elem_id(int p_node_id_1, int p_node_id_2, int p_node_id_3) const;
-	std::vector<int> find_elem_edge(int p_node_id1, int p_node_id2) const;
+	std::vector<int> find_elem_edge(int p_node_id_1, int p_node_id_2) const;
 
 	get_c_node_border(); //метод, возвращающий контейнер граничных узлов по ID границы;
 	get_c_range(); //метод, возвращающий контейнер КЭ с заданным ID области;

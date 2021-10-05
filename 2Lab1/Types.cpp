@@ -4,31 +4,31 @@
 #include <vector>
 
 Node::Node(int p_node_id, const std::array<double, 3>& p_XYZ, bool p_flag)
-	: node_id(p_node_id), XYZ(p_XYZ), flag(p_flag)
+	: m_node_id(p_node_id), m_XYZ(p_XYZ), m_flag(p_flag)
 {}
 
 Node::Node(const Node& p_node)
-	: node_id(p_node.node_id), XYZ(p_node.XYZ), flag(p_node.flag)
+	: m_node_id(p_node.m_node_id), m_XYZ(p_node.m_XYZ), m_flag(p_node.m_flag)
 {}
 
 std::istream& operator >> (std::istream& p_in, Node& p_node)
 {
-	p_in >> p_node.node_id;
-	p_in >> p_node.XYZ.at(0) >> p_node.XYZ.at(1) >> p_node.XYZ.at(2); //fill array in
-	p_in >> p_node.flag;
+	p_in >> p_node.m_node_id;
+	p_in >> p_node.m_XYZ.at(0) >> p_node.m_XYZ.at(1) >> p_node.m_XYZ.at(2); //fill array in
+	p_in >> p_node.m_flag;
 	return p_in;
 }
 
 std::ostream& operator << (std::ostream& p_out, const Node& p_node)
 {
-	p_out << p_node.node_id << std::endl;
-	p_out << p_node.XYZ.at(0) << " " << p_node.XYZ.at(1) << " " << p_node.XYZ.at(2);
-	p_out << p_node.flag << std::endl;
+	p_out << p_node.m_node_id << std::endl;
+	p_out << p_node.m_XYZ.at(0) << " " << p_node.m_XYZ.at(1) << " " << p_node.m_XYZ.at(2);
+	p_out << p_node.m_flag << std::endl;
 	return p_out;
 }
 
 FiniteElement::FiniteElement(int p_element_id, int p_material_id, const std::vector<int>& p_node_id)
-	: element_id(p_element_id), material_id(p_material_id), node_id(p_node_id)
+	: m_element_id(p_element_id), m_material_id(p_material_id), m_node_id(p_node_id)
 {}
 
 std::optional<bool> read_node_id(std::istream& p_in) { // flag yes or no ( new node )
@@ -39,12 +39,12 @@ std::optional<bool> read_node_id(std::istream& p_in) { // flag yes or no ( new n
 
 std::istream& operator>>(std::istream& p_in, FiniteElement& p_finite_elem)
 {
-	p_in >> p_finite_elem.element_id >> p_finite_elem.material_id;
+	p_in >> p_finite_elem.m_element_id >> p_finite_elem.m_material_id;
 
 	std::optional<bool> local_node_id;  // fill vector in
 	local_node_id = read_node_id(p_in);
 	while (local_node_id) {
-		p_finite_elem.node_id.push_back(*local_node_id);
+		p_finite_elem.m_node_id.push_back(*local_node_id);
 		local_node_id = read_node_id(p_in);
 	}
 
