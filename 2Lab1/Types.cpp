@@ -54,7 +54,7 @@ std::istream& operator>>(std::istream& p_in, FiniteElement& p_finite_elem)
 
 std::ostream& operator<<(std::ostream& p_out, const FiniteElement& p_finite_elem)
 {
-	p_out << p_finite_elem.element_id << std::endl << p_finite_elem.material_id << std::endl;
+	p_out << p_finite_elem.m_element_id << std::endl << p_finite_elem.m_material_id << std::endl;
 	p_out << "[ ";
 	for (const auto& node : p_finite_elem.m_node_id) p_out << node << ", "; //vector
 	p_out << "]";
