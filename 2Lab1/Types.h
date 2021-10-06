@@ -6,7 +6,7 @@
 struct Node {
 	std::array<double, 3> m_XYZ;
 	int m_node_id;
-	bool m_flag = 0;
+	bool m_flag = 0; //0-not middle, 1-it is
 
 	Node(int, const std::array<double, 3>&, bool);
 	Node(const Node&);
@@ -35,4 +35,16 @@ struct BoundaryFiniteElement {
 
 	friend std::istream& operator >> (std::istream&, BoundaryFiniteElement&);
 	friend std::ostream& operator << (std::ostream&, const BoundaryFiniteElement&);
+};
+
+struct Edge {
+	std::pair<int, int> m_nodes;
+	int m_middle_node=-1;
+
+	Edge() = default;
+	Edge(int, int);
+
+	Edge operator = (const Edge&);
+	bool operator == (const Edge&) const;
+	void update_mid(int);
 };

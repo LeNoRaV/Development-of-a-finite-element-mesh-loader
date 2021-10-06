@@ -139,7 +139,51 @@ std::vector<int> MeshLoader::get_f_node_by_boundary(int p_boundary_id) const
 
 void MeshLoader::insert_middle() 
 {
+	for (auto& elem : m_finite_elems) {
+		std::vector<int> cur_nodes_id = elem.m_node_id;
+		for (auto first_node = 0; first_node < 4; ++first_node)
+			for (auto second_node = first_node + 1; second_node < 4; ++second_node) {
+				Edge cur_edge(cur_nodes_id[first_node], cur_nodes_id[second_node]);
+				if (cur_edge.m_middle_node==-1) {
+					Node new_node = get_middle_node(cur_edge);
+					cur_edge.update_mid(new_node.m_node_id);
+					m_nodes.push_back(new_node);
+				}
+				else {
+					elem.m_node_id.push_back(cur_edge.m_middle_node);
+				}
+			}
+	}
 
+	for (auto& elem : m_boundary) {
+		std::vector<int> cur_nodes_id = elem.m_node_id;
+		for (auto first_node = 0; first_node < 3; ++first_node)
+			for (auto second_node = first_node + 1; second_node < 3; ++second_node) {
+				Edge cur_edge(cur_nodes_id[first_node], cur_nodes_id[second_node]);
+				if (cur_edge.m_middle_node == -1) {
+					Node new_node = get_middle_node(cur_edge);
+					cur_edge.update_mid(new_node.m_node_id);
+					m_nodes.push_back(new_node);
+				}
+				else {
+					elem.m_node_id.push_back(cur_edge.m_middle_node);
+				}
+			}
+	}
+}
+
+std::vector<std::vector<int>> MeshLoader::get_adjacent_nodes() const
+{
+	std::vector<std::vector<int>> res(m_nodes.size() + 1);
+
+	for (const auto& cur_elem : m_finite_elems) {
+		for (auto cur_node_id : cur_elem.m_node_id)
+			for (auto adj_node_id : cur_elem.m_node_id)
+				if (cur_node_id != adj_node_id)
+					res[cur_node_id].push_back(adj_node_id);
+	}
+
+	return res;
 }
 
 std::ostream& operator << (std::ostream& p_out, const std::vector<Node>& node)
@@ -161,4 +205,20 @@ std::ostream& operator << (std::ostream& p_out, const std::vector<BoundaryFinite
 Node& MeshLoader::get_node_by_id(int p_id)
 {
 	return m_nodes.at(p_id);
+}
+
+std::array<double, 3> MeshLoader::get_middle_of_edge(const Edge& p_edge)
+{
+	std::array<double, 3> arr;
+	arr.at(0) = ((m_nodes.at(p_edge.m_nodes.first-1).m_XYZ.at(0)) + (m_nodes.at(p_edge.m_nodes.second - 1).m_XYZ.at(0))) / 2;
+	arr.at(1) = ((m_nodes.at(p_edge.m_nodes.first-1).m_XYZ.at(1)) + (m_nodes.at(p_edge.m_nodes.second - 1).m_XYZ.at(1))) / 2;
+	arr.at(2) = ((m_nodes.at(p_edge.m_nodes.first-1).m_XYZ.at(2)) + (m_nodes.at(p_edge.m_nodes.second - 1).m_XYZ.at(2))) / 2;
+	return arr;
+}
+
+Node MeshLoader::get_middle_node(const Edge& cur_edge)
+{
+	Node new_node(m_nodes.size() + 1, get_middle_of_edge(cur_edge), 1);
+
+	return new_node;
 }

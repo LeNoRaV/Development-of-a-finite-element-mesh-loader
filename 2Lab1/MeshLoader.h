@@ -7,6 +7,8 @@
 class MeshLoader{
 
 	Node& get_node_by_id(int);
+	std::array<double, 3> get_middle_of_edge(const Edge& p_edge);
+	Node get_middle_node(const Edge& cur_edge);
 
 public:
 	virtual void LoadMesh(const std::string&) = 0;
@@ -30,9 +32,8 @@ public:
 	std::vector<int> get_node_by_finite(int p_material_id) const;
 	std::vector<int> get_f_node_by_boundary(int p_boundary_id) const;
 	
-	void insert_middle(); //метод, производ€щий вставку новых узлов в середины ребер существующих  Ё (включа€ граничные  Ё).
-	                 //”честь, что обновл€ютс€ как списки узлов каждого  Ё, так общий список узлов сетки;
-	//make_c_n(); //метод, создающий контейнер, n-ый элемент которого хранит контейнер всех Ђсоседейї по ребрам дл€ узла n;
+	void insert_middle(); 
+	std::vector<std::vector<int>> get_adjacent_nodes()const;
 
 	friend std::ostream& operator << (std::ostream&, const std::vector<Node>&);
 	friend std::ostream& operator << (std::ostream&, const std::vector<FiniteElement>&);

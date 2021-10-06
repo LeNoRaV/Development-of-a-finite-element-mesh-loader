@@ -87,3 +87,25 @@ std::ostream& operator << (std::ostream& p_out, const BoundaryFiniteElement& p_b
 	p_out << "]";
 	return p_out;
 }
+
+Edge::Edge(int p_id_first_node, int p_id_second_node)
+	:m_nodes(std::make_pair(p_id_first_node, p_id_second_node))
+{}
+
+Edge Edge::operator=(const Edge& p_edge)
+{
+	Edge res;
+	res.m_nodes = p_edge.m_nodes;
+	return res;
+}
+
+bool Edge::operator==(const Edge& p_edge) const
+{
+	return (m_nodes.first == p_edge.m_nodes.first)
+		&& (m_nodes.second == p_edge.m_nodes.second);
+}
+
+void Edge::update_mid(int p_middle_node)
+{
+	m_middle_node = p_middle_node;
+}

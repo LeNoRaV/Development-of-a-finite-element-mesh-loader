@@ -4,24 +4,23 @@
 
 int main()
 {
-    /*MeshLoader* My = new AneuMeshLoader;
+    MeshLoader* My = new AneuMeshLoader;
     std::string name;
     std::cout << "Enter file name ";
     std::cin >> name;
-    My->LoadMesh(name);*/
+    My->LoadMesh(name);
 
-    MeshLoader* My = new AneuMeshLoader;
-    My->LoadMesh("1.neu");
+    std::vector<Node> nodes = My->get_node();
+    std::vector<FiniteElement> finite_elements = My->get_finite_elems();
+    std::vector<BoundaryFiniteElement> boundaries = My->get_boundary();
 
-    /*std::cout << "Nodes:" << std::endl;
-    std::cout << My->get_node() << std::endl;
+    std::vector<int> elems_by_id = My->find_elem_id(1, 2, 3);
+    std::vector<int> elems_by_edge= My->find_elem_edge(1, 2);
 
-    std::cout << "Finite Elems:" << std::endl;
-    std::cout << My->get_finite_elems() << std::endl;
-    
-    std::cout << "Boundaries:" << std::endl;
-    std::cout << My->get_boundary() << std::endl;*/
+    std::vector<int> node_by_boundary = My->get_node_by_boundary(1);
+    std::vector<int> node_by_finite = My->get_node_by_finite(1);
+    std::vector<int> f_node_by_boundary = My->get_f_node_by_boundary(1);
 
-
+    My->insert_middle();
 }
 
