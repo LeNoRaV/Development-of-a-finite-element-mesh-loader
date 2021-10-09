@@ -11,4 +11,5 @@ void AneuMeshLoader::LoadMesh(const std::string& filename)
 		throw FileIsNotFound(filename);
 	}
 
+    //!!! Где чтение файла??
 }
