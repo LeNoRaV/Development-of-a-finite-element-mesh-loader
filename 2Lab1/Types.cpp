@@ -92,9 +92,9 @@ Edge::Edge(int p_id_first_node, int p_id_second_node)
 	:m_nodes(std::make_pair(p_id_first_node, p_id_second_node))
 {}
 
-Edge Edge::operator=(const Edge& p_edge)
+Edge Edge::operator=(const Edge& p_edge) //!!! 1. Неверный тип возврата. 2. Чем не устраивает = по умолчанию?
 {
-	Edge res;
+	Edge res; //!!! Странная перегрузка...
 	res.m_nodes = p_edge.m_nodes;
 	return res;
 }
