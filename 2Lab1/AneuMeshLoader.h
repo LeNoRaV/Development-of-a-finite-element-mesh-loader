@@ -3,7 +3,7 @@
 #include "MeshLoader.h"
 
 class AneuMeshLoader : public MeshLoader {
-	~AneuMeshLoader() {};
+	~AneuMeshLoader() {}; //!!! Зачем нужен явный деструктор?
 public:
 	void LoadMesh(const std::string&) override;
 };
