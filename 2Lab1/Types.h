@@ -8,6 +8,7 @@ struct Node {
 	int m_node_id;
 	bool m_flag = 0; //0-not middle, 1-it is
 
+	Node() = default;
 	Node(int, const std::array<double, 3>&, bool);
 	Node(const Node&);
 
@@ -20,6 +21,7 @@ struct FiniteElement {
 	int m_material_id;
 	std::vector<int> m_node_id;
 
+	FiniteElement() = default;
 	FiniteElement(int, int, const std::vector<int>&);
 
 	friend std::istream& operator >> (std::istream&, FiniteElement&);
@@ -31,6 +33,7 @@ struct BoundaryFiniteElement {
 	int m_boundary_id;
 	std::vector<int> m_node_id;
 
+	BoundaryFiniteElement() = default;
 	BoundaryFiniteElement(int, int, const std::vector<int>&);
 
 	friend std::istream& operator >> (std::istream&, BoundaryFiniteElement&);
@@ -44,7 +47,7 @@ struct Edge {
 	Edge() = default;
 	Edge(int, int);
 
-	Edge operator = (const Edge&);
+	Edge& operator = (const Edge&);
 	bool operator == (const Edge&) const;
 	void update_mid(int);
 };

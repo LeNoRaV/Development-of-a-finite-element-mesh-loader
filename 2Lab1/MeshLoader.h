@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <set>
 #include <string>
 #include "Types.h"
 
@@ -28,12 +29,12 @@ public:
 	std::vector<int> find_elem_id(int p_node_id_1, int p_node_id_2, int p_node_id_3) const;
 	std::vector<int> find_elem_edge(int p_node_id_1, int p_node_id_2) const;
 
-	std::vector<int> get_node_by_boundary(int p_boundary_id) const; 
-	std::vector<int> get_node_by_finite(int p_material_id) const;
-	std::vector<int> get_f_node_by_boundary(int p_boundary_id) const;
+	std::set<int> get_node_by_boundary(int p_boundary_id) const; 
+	std::set<int> get_node_by_finite(int p_material_id) const;
+	std::set<int> get_f_node_by_boundary(int p_boundary_id) const;
 	
-	void insert_middle(); 
-	std::vector<std::vector<int>> get_adjacent_nodes()const;
+	void insert_middle(int p_element_id);
+	std::vector<std::set<int>> get_adjacent_nodes()const;
 
 	friend std::ostream& operator << (std::ostream&, const std::vector<Node>&);
 	friend std::ostream& operator << (std::ostream&, const std::vector<FiniteElement>&);
