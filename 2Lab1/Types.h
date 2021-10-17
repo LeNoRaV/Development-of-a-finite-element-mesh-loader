@@ -47,7 +47,8 @@ struct Edge {
 	Edge() = default;
 	Edge(int, int);
 
-	Edge& operator = (const Edge&);
+	Edge& operator = (const Edge&); //!!! Зачем нужен оператор присваивания? Среди полей нет указателей.
+	
 	bool operator == (const Edge&) const;
 	void update_mid(int);
 };
