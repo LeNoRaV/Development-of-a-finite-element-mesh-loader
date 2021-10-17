@@ -143,7 +143,11 @@ void MeshLoader::insert_middle(int p_element_id)
 				new_node.m_flag = 1;
 				//does node already exist?
 				bool exist = 0;
-				for (auto node : m_nodes) {
+				
+				for (auto node : m_nodes) { //!!! 1. Копирование на каждой итерации. 2. Крайне не эффективно - не выполнено условие
+				                            //!!! по сложности, для каждого ребра обходятся все узлы. 
+				                            //!!! Просмотренные ребра нужно хешировать и проверять, было ли ребро обработано
+				                            //!!! ранее и, если да, то изъять из ребра ID вставленного узла. Нет - создать новый узел и захешировать ребро.
 					if (new_node.m_XYZ == node.m_XYZ) 
 						exist = 1;
 				}
@@ -161,7 +165,7 @@ void MeshLoader::insert_middle(int p_element_id)
 				Edge cur_edge(cur_nodes_id[first_node], cur_nodes_id[second_node]);
 				Node new_node = get_middle_node(cur_edge);
 				bool exist = 0;
-				for (auto node : m_nodes) {
+				for (auto node : m_nodes) { //!!! Не эффективно + копирование на каждой итерации
 					if (new_node.m_XYZ == node.m_XYZ)
 						exist = 1;
 				}
