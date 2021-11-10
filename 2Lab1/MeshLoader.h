@@ -3,6 +3,7 @@
 #include <vector>
 #include <set>
 #include <string>
+#include <ranges>
 #include "Types.h"
 
 class MeshLoader{
@@ -39,4 +40,5 @@ public:
 	friend std::ostream& operator << (std::ostream&, const std::vector<Node>&);
 	friend std::ostream& operator << (std::ostream&, const std::vector<FiniteElement>&);
 	friend std::ostream& operator << (std::ostream&, const std::vector<BoundaryFiniteElement>&);
+
 };

@@ -46,9 +46,30 @@ struct Edge {
 
 	Edge() = default;
 	Edge(int, int);
-
-	Edge& operator = (const Edge&); //!!! Зачем нужен оператор присваивания? Среди полей нет указателей.
 	
 	bool operator == (const Edge&) const;
+	Edge& operator=(const Edge& p_edge);
 	void update_mid(int);
 };
+
+class Hash
+{
+public:
+	std::size_t operator() (const Edge& _p) const
+	{
+		std::size_t o_seed = 0;
+		if (_p.m_nodes.first > _p.m_nodes.second)
+		{
+			o_seed ^= std::hash<int>() (_p.m_nodes.first) + 0x9e3779b9 + (o_seed << 6) + (o_seed >> 2);
+			o_seed ^= std::hash<int>() (_p.m_nodes.second) + 0x9e3779b9 + (o_seed << 6) + (o_seed >> 2);
+		}
+		else
+		{
+			o_seed ^= std::hash<int>() (_p.m_nodes.second) + 0x9e3779b9 + (o_seed << 6) + (o_seed >> 2);
+			o_seed ^= std::hash<int>() (_p.m_nodes.first) + 0x9e3779b9 + (o_seed << 6) + (o_seed >> 2);
+		}
+
+		return o_seed;
+	};
+};
+

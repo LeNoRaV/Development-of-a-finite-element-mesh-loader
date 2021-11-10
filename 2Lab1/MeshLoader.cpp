@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <vector>
 #include <set>
+#include <unordered_set>
 
 const std::vector<Node>& MeshLoader::get_node() const
 {
@@ -133,45 +134,40 @@ std::set<int> MeshLoader::get_f_node_by_boundary(int p_boundary_id) const
 
 void MeshLoader::insert_middle(int p_element_id)
 {
-	for (auto& elem : m_finite_elems) {
-		std::vector<int> cur_nodes_id = elem.m_node_id;
+	std::unordered_set<Edge, Hash> List_edge;
+
+	for (auto& fin_elem : m_finite_elems) {
+		std::vector<int> cur_nodes_id = fin_elem.m_node_id;
 		for (auto first_node = 0; first_node < 4; ++first_node)
 			for (auto second_node = first_node + 1; second_node < 4; ++second_node) {
 			    
 				Edge cur_edge(cur_nodes_id[first_node], cur_nodes_id[second_node]);
-				Node new_node = get_middle_node(cur_edge);
-				new_node.m_flag = 1;
-				//does node already exist?
-				bool exist = 0;
-				
-				for (auto node : m_nodes) { //!!! 1. Копирование на каждой итерации. 2. Крайне не эффективно - не выполнено условие
-				                            //!!! по сложности, для каждого ребра обходятся все узлы. 
-				                            //!!! Просмотренные ребра нужно хешировать и проверять, было ли ребро обработано
-				                            //!!! ранее и, если да, то изъять из ребра ID вставленного узла. Нет - создать новый узел и захешировать ребро.
-					if (new_node.m_XYZ == node.m_XYZ) 
-						exist = 1;
-				}
-				if (!exist) {
-					cur_edge.m_middle_node = 1;
+				auto elem = *List_edge.find(cur_edge);
+				//not found
+				if (elem == *List_edge.end()) { 
+					Node new_node = get_middle_node(cur_edge);
+					new_node.m_flag = 1;
 					m_nodes.push_back(new_node);
+					cur_nodes_id.push_back(new_node.m_node_id);
+					List_edge.insert(elem);
+					elem.m_middle_node = new_node.m_node_id;
+				}
+				else {
+					fin_elem.m_node_id.push_back(elem.m_middle_node);
 				}
 			}
 	}
 
-	for (auto& elem : m_boundary) {
-		std::vector<int> cur_nodes_id = elem.m_node_id;
+	for (auto& bound_elem : m_boundary) {
+		std::vector<int> cur_nodes_id = bound_elem.m_node_id;
 		for (auto first_node = 0; first_node < 3; ++first_node)
 			for (auto second_node = first_node + 1; second_node < 3; ++second_node) {
+				
 				Edge cur_edge(cur_nodes_id[first_node], cur_nodes_id[second_node]);
-				Node new_node = get_middle_node(cur_edge);
-				bool exist = 0;
-				for (auto node : m_nodes) { //!!! Не эффективно + копирование на каждой итерации
-					if (new_node.m_XYZ == node.m_XYZ)
-						exist = 1;
-				}
-				if (!exist) {
-					cur_edge.m_middle_node = 1;
-					m_nodes.push_back(new_node);
+				auto elem = *List_edge.find(cur_edge);
+				//found
+				if (elem != *List_edge.end()) {
+					bound_elem.m_node_id.push_back(elem.m_middle_node);
 				}
 			}
 	}

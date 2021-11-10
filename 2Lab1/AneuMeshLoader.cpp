@@ -37,7 +37,7 @@ void AneuMeshLoader::LoadMesh(const std::string& filename)
 			cur_f_elem.m_node_id.push_back(node_id);
 		}
 		
-		m_finite_elems.push_back(cur_f_elem); //!!! std::move
+		m_finite_elems.push_back(std::move(cur_f_elem));
 	}
 
 	int boundary_number, nodes_in_boundary;
@@ -54,6 +54,6 @@ void AneuMeshLoader::LoadMesh(const std::string& filename)
 			file >> node_id;
 			cur_b_elem.m_node_id.push_back(node_id);
 		}
-		m_boundary.push_back(cur_b_elem);  //!!! std::move
+		m_boundary.push_back(std::move(cur_b_elem)); 
 	}
 }
