@@ -223,3 +223,10 @@ Node MeshLoader::get_middle_node(const Edge& cur_edge)
 
 	return new_node;
 }
+
+FiniteElement& MeshLoader::operator[](int k) {
+	auto elem = m_finite_elems.begin();
+	while (elem->m_element_id != k)
+		elem++;
+	return *elem;
+}

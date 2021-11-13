@@ -41,4 +41,5 @@ public:
 	friend std::ostream& operator << (std::ostream&, const std::vector<FiniteElement>&);
 	friend std::ostream& operator << (std::ostream&, const std::vector<BoundaryFiniteElement>&);
 
+	FiniteElement& operator[](int k);
 };
