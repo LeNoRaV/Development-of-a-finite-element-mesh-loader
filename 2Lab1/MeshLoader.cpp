@@ -142,9 +142,12 @@ void MeshLoader::insert_middle(int p_element_id)
 			for (auto second_node = first_node + 1; second_node < 4; ++second_node) {
 			    
 				Edge cur_edge(cur_nodes_id[first_node], cur_nodes_id[second_node]);
-				auto elem = *List_edge.find(cur_edge);
+				
+				auto elem = *List_edge.find(cur_edge); //!!! Если такого ребра нет, то find вернет end(),
+				                                       //!!! при разыменовании которого поведение не опеределно
+				
 				//not found
-				if (elem == *List_edge.end()) { 
+				if (elem == *List_edge.end()) { //!!! "Разыменовать end()" - это что за ребро такое? С чем сравниваете?
 					Node new_node = get_middle_node(cur_edge);
 					new_node.m_flag = 1;
 					m_nodes.push_back(new_node);
