@@ -17,7 +17,7 @@
 // using cosine theorem
 // sides of a triangle
 
-struct triangle
+struct triangle //!!! Зачем нужен этот тип, если и так есть тип конечного элемента?
 {
     double AB;
     double BC;
@@ -41,19 +41,28 @@ struct triangle
 
 // angle is less than 30 if cos is greater than sqrt (3) / 2
 
-void Function(MeshLoader& My, std::string filename) {
+//!!! Из названия не понятно, что функция делает
+void Function(MeshLoader& My, std::string filename) { //!!! С каких пор мы строки передаем по значению? где const у My ?
 	int id;
 	std::cout << "Enter border ID:" << std::endl;
 	std::cin >> id;
-	std::set<int> Container = My.get_f_node_by_boundary(id);
+	
+	
+	std::set<int> Container = My.get_f_node_by_boundary(id); //!!! Не выполнено задание. "Создать контейнер граничных КЭ с данной поверхности"
+	                                                         //!!! Зачем нам узлы?
 
 	std::ofstream file(filename);
 	if (!file.is_open()) 
 		throw FileIsNotFound(filename);
 	else {
-        auto good_nodes = [&](const int& f_node_from_container) {
-            auto nodes = My[f_node_from_container].m_node_id;
-            auto good_angle = [&](int& node1, int& node2, int& node3) {
+	    
+	    //!!! Не понятно, почему предикат принимает ID узла,
+	    //!!! если контейнер должен содежать граничные КЭ (НЕ ИХ ID, а САМИ ГРАНИЧНЫЕ КЭ)
+	    
+        auto good_nodes = [&](const int& f_node_from_container) { //!!! Для фундаментальных типов не нужно const &
+            auto nodes = My[f_node_from_container].m_node_id; //!!! Лучше использовать find
+            
+            auto good_angle = [&](int& node1, int& node2, int& node3) { //!!! Зачем тут ссылки?
                 triangle tri(My.get_node().at(node1), My.get_node().at(node2), My.get_node().at(node3));
                 double max_cos = std::max(
                     std::max(
