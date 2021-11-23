@@ -32,7 +32,7 @@ public:
 
 	std::set<int> get_node_by_boundary(int p_boundary_id) const; 
 	std::set<int> get_node_by_finite(int p_material_id) const;
-	std::set<int> get_f_node_by_boundary(int p_boundary_id) const;
+	std::set<FiniteElement> get_f_node_by_boundary(int p_boundary_id) const; //get FiniteElement
 	
 	void insert_middle(int p_element_id);
 	std::vector<std::set<int>> get_adjacent_nodes()const;

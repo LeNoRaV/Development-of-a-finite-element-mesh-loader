@@ -110,9 +110,10 @@ std::set<int> MeshLoader::get_node_by_finite(int p_material_id) const
 }
 
 
-std::set<int> MeshLoader::get_f_node_by_boundary(int p_boundary_id) const
+std::set<FiniteElement> MeshLoader::get_f_node_by_boundary(int p_boundary_id) const
 {
-	std::set<int> res;
+	std::set<int> res_nodes;
+	std::set<FiniteElement> res;
 
 	auto first_to_find = m_boundary.begin();
 	auto last_to_find = m_boundary.end();
@@ -125,10 +126,34 @@ std::set<int> MeshLoader::get_f_node_by_boundary(int p_boundary_id) const
 
 		if (found_boundary != last_to_find) {
 			for (const auto& node_in_boundary : found_boundary->m_node_id)
-				res.insert(node_in_boundary);
+				res_nodes.insert(node_in_boundary);
 			first_to_find = found_boundary + 1;
 		}
 	}
+
+	auto first_to_find_in_f = m_finite_elems.begin();
+	auto last_to_find_in_f = m_finite_elems.end();
+
+	while (first_to_find != last_to_find) {
+		auto found_FiniteElement = std::find_if(first_to_find_in_f, last_to_find_in_f,
+			[res_nodes](const FiniteElement& cur_finite_elem) {
+				int count = 0;
+				for (auto elem : res_nodes)
+				{
+					if (elem == cur_finite_elem.m_node_id.at(0)) count++;
+					if (elem == cur_finite_elem.m_node_id.at(1)) count++;
+					if (elem == cur_finite_elem.m_node_id.at(2)) count++;
+				}
+				if (count == 3) return 1;
+				else return 0;
+			});
+
+		if (found_FiniteElement != last_to_find_in_f) {
+			res.insert(*found_FiniteElement);
+			first_to_find_in_f = found_FiniteElement + 1;
+		}
+	}
+
 	return res;
 }
 

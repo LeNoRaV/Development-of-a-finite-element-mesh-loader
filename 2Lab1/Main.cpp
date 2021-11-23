@@ -17,68 +17,47 @@
 // using cosine theorem
 // sides of a triangle
 
-struct triangle //!!! Зачем нужен этот тип, если и так есть тип конечного элемента?
-{
-    double AB;
-    double BC;
-    double CA;
-
-    triangle(const Node& node1, const Node& node2, const Node& node3)
-    {
-        AB = sqrt((node1.m_XYZ.at(0) - node2.m_XYZ.at(0)) * (node1.m_XYZ.at(0) - node2.m_XYZ.at(0)) +
-            (node1.m_XYZ.at(1) - node2.m_XYZ.at(1)) * (node1.m_XYZ.at(1) - node2.m_XYZ.at(1)) +
-            (node1.m_XYZ.at(2) - node2.m_XYZ.at(2)) * (node1.m_XYZ.at(2) - node2.m_XYZ.at(2)));
-        BC = sqrt((node2.m_XYZ.at(0) - node3.m_XYZ.at(0)) * (node2.m_XYZ.at(0) - node3.m_XYZ.at(0)) +
-            (node2.m_XYZ.at(1) - node3.m_XYZ.at(1)) * (node2.m_XYZ.at(1) - node3.m_XYZ.at(1)) +
-            (node2.m_XYZ.at(2) - node3.m_XYZ.at(2)) * (node2.m_XYZ.at(2) - node3.m_XYZ.at(2)));
-        CA = sqrt((node1.m_XYZ.at(0) - node3.m_XYZ.at(0)) * (node1.m_XYZ.at(0) - node3.m_XYZ.at(0)) +
-            (node1.m_XYZ.at(1) - node3.m_XYZ.at(1)) * (node1.m_XYZ.at(1) - node3.m_XYZ.at(1)) +
-            (node1.m_XYZ.at(2) - node3.m_XYZ.at(2)) * (node1.m_XYZ.at(2) - node3.m_XYZ.at(2)));
-    }
-
-    ~triangle() = default;
-};
 
 // angle is less than 30 if cos is greater than sqrt (3) / 2
 
-//!!! Из названия не понятно, что функция делает
-void Function(MeshLoader& My, std::string filename) { //!!! С каких пор мы строки передаем по значению? где const у My ?
-	int id;
+void Triangle_with_angle_less_then_30(const MeshLoader& My, const std::string& filename) {
+    int id;
 	std::cout << "Enter border ID:" << std::endl;
 	std::cin >> id;
 	
 	
-	std::set<int> Container = My.get_f_node_by_boundary(id); //!!! Не выполнено задание. "Создать контейнер граничных КЭ с данной поверхности"
-	                                                         //!!! Зачем нам узлы?
+	std::set<FiniteElement> Container = My.get_f_node_by_boundary(id);
 
 	std::ofstream file(filename);
 	if (!file.is_open()) 
 		throw FileIsNotFound(filename);
 	else {
-	    
-	    //!!! Не понятно, почему предикат принимает ID узла,
-	    //!!! если контейнер должен содежать граничные КЭ (НЕ ИХ ID, а САМИ ГРАНИЧНЫЕ КЭ)
-	    
-        auto good_nodes = [&](const int& f_node_from_container) { //!!! Для фундаментальных типов не нужно const &
-            auto nodes = My[f_node_from_container].m_node_id; //!!! Лучше использовать find
-            
-            auto good_angle = [&](int& node1, int& node2, int& node3) { //!!! Зачем тут ссылки?
-                triangle tri(My.get_node().at(node1), My.get_node().at(node2), My.get_node().at(node3));
+	     auto good_f_elem = [&](FiniteElement f_elem) { 
+            auto good_angle = [&](int node1, int node2, int node3) {
+                double AB = sqrt((My.get_node()[node1].m_XYZ.at(0) - My.get_node()[node2].m_XYZ.at(0)) * (My.get_node()[node1].m_XYZ.at(0) - My.get_node()[node2].m_XYZ.at(0)) +
+                    (My.get_node()[node1].m_XYZ.at(1) - My.get_node()[node2].m_XYZ.at(1)) * (My.get_node()[node1].m_XYZ.at(1) - My.get_node()[node2].m_XYZ.at(1)) +
+                    (My.get_node()[node1].m_XYZ.at(2) - My.get_node()[node2].m_XYZ.at(2)) * (My.get_node()[node1].m_XYZ.at(2) - My.get_node()[node2].m_XYZ.at(2)));
+                double BC = sqrt((My.get_node()[node2].m_XYZ.at(0) - My.get_node()[node3].m_XYZ.at(0)) * (My.get_node()[node2].m_XYZ.at(0) - My.get_node()[node3].m_XYZ.at(0)) +
+                    (My.get_node()[node2].m_XYZ.at(1) - My.get_node()[node3].m_XYZ.at(1)) * (My.get_node()[node2].m_XYZ.at(1) - My.get_node()[node3].m_XYZ.at(1)) +
+                    (My.get_node()[node2].m_XYZ.at(2) - My.get_node()[node3].m_XYZ.at(2)) * (My.get_node()[node2].m_XYZ.at(2) - My.get_node()[node3].m_XYZ.at(2)));
+                double CA = sqrt((My.get_node()[node1].m_XYZ.at(0) - My.get_node()[node3].m_XYZ.at(0)) * (My.get_node()[node1].m_XYZ.at(0) - My.get_node()[node3].m_XYZ.at(0)) +
+                    (My.get_node()[node1].m_XYZ.at(1) - My.get_node()[node3].m_XYZ.at(1)) * (My.get_node()[node1].m_XYZ.at(1) - My.get_node()[node3].m_XYZ.at(1)) +
+                    (My.get_node()[node1].m_XYZ.at(2) - My.get_node()[node3].m_XYZ.at(2)) * (My.get_node()[node1].m_XYZ.at(2) - My.get_node()[node3].m_XYZ.at(2)));
                 double max_cos = std::max(
                     std::max(
-                        (tri.AB * tri.AB + tri.BC * tri.BC - tri.CA * tri.CA) / (2 * tri.AB * tri.BC),
-                        (tri.AB * tri.AB - tri.BC * tri.BC + tri.CA * tri.CA) / (2 * tri.AB * tri.CA)),
-                    (tri.BC * tri.BC + tri.CA * tri.CA - tri.AB * tri.AB) / (2 * tri.CA * tri.BC)
+                        (AB * AB + BC * BC - CA * CA) / (2 * AB * BC),
+                        (AB * AB - BC * BC + CA * CA) / (2 * AB * CA)),
+                    (BC * BC + CA * CA - AB * AB) / (2 * CA * BC)
                 );
                 return (max_cos <= 1 && max_cos >= sqrt(3) / 2);
             };
-            return good_angle(nodes.at(0), nodes.at(1), nodes.at(2));
+            return good_angle(f_elem.m_node_id.at(0), f_elem.m_node_id.at(1), f_elem.m_node_id.at(2));
         };
 
-        auto transform = [&](const int& f_node_from_container) {
-            return My[f_node_from_container].m_node_id;
+        auto transform = [&](FiniteElement f_elem) {
+            return My.get_finite_elems()[f_elem.m_element_id].m_node_id;
         };
-        auto res = Container | std::ranges::views::filter(good_nodes) | std::ranges::views::transform(transform);
+        auto res = Container | std::ranges::views::filter(good_f_elem) | std::ranges::views::transform(transform);
         std::ranges::copy(res, std::ostream_iterator<std::vector<int>>(file, "\n"));
 	}
 }
@@ -101,10 +80,10 @@ int main()
 
     std::set<int> node_by_boundary = std::move(My->get_node_by_boundary(1)); 
     std::set<int> node_by_finite = std::move(My->get_node_by_finite(1)); 
-    std::set<int> f_node_by_boundary = std::move(My->get_f_node_by_boundary(1)); 
+    std::set<FiniteElement> f_node_by_boundary = std::move(My->get_f_node_by_boundary(1));
 
     My->insert_middle(2);
-	Function(*My, name);
+    Triangle_with_angle_less_then_30(*My, name);
 
     delete My;
 }

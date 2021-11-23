@@ -49,8 +49,6 @@ struct Edge {
 	
 	bool operator == (const Edge&) const;
 	
-	Edge& operator=(const Edge& p_edge); //!!! Чем не устраивает =, создаваемый автоматически?
-	
 	void update_mid(int);
 };
 
