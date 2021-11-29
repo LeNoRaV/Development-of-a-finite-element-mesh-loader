@@ -3,6 +3,7 @@
 #include <array>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 Node::Node(int p_node_id, const std::array<double, 3>& p_XYZ, bool p_flag)
 	: m_node_id(p_node_id), m_XYZ(p_XYZ), m_flag(p_flag)
@@ -101,4 +102,14 @@ bool Edge::operator==(const Edge& p_edge) const
 void Edge::update_mid(int p_middle_node)
 {
 	m_middle_node = p_middle_node;
+}
+
+std::ostream& std::operator << (std::ostream& p_out, const std::vector<int>& elem) {
+	int n = 1;
+	std::for_each(elem.begin(), elem.end(), [&](const auto& i) {
+		p_out << "Container_" << n << std::endl;
+		p_out << i;
+		++n;
+		});
+	return p_out;
 }

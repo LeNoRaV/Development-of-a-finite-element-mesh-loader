@@ -110,7 +110,29 @@ std::set<int> MeshLoader::get_node_by_finite(int p_material_id) const
 }
 
 
-std::set<FiniteElement> MeshLoader::get_f_node_by_boundary(int p_boundary_id) const
+std::set<int> MeshLoader::get_f_node_by_boundary(int p_boundary_id) const
+{
+	std::set<int> res;
+
+	auto first_to_find = m_boundary.begin();
+	auto last_to_find = m_boundary.end();
+
+	while (first_to_find != last_to_find) {
+		auto found_boundary = std::find_if(first_to_find, last_to_find,
+			[p_boundary_id](const BoundaryFiniteElement& cur_boundary) {
+				return cur_boundary.m_boundary_id == p_boundary_id;
+			});
+
+		if (found_boundary != last_to_find) {
+			for (const auto& node_in_boundary : found_boundary->m_node_id)
+				res.insert(node_in_boundary);
+			first_to_find = found_boundary + 1;
+		}
+	}
+	return res;
+}
+
+std::set<FiniteElement> MeshLoader::get_f_node_by_boundary_task(int p_boundary_id) const 
 {
 	std::set<int> res_nodes;
 	std::set<FiniteElement> res;
@@ -131,10 +153,8 @@ std::set<FiniteElement> MeshLoader::get_f_node_by_boundary(int p_boundary_id) co
 		}
 	}
 
+	// for task I need to create container that consists from Finite Elems
 
-
-
-    // А это зачем нужно? Собрать нужно узлы с границы. Или что этот метод делает?
 	auto first_to_find_in_f = m_finite_elems.begin();
 	auto last_to_find_in_f = m_finite_elems.end();
 
@@ -172,20 +192,19 @@ void MeshLoader::insert_middle(int p_element_id)
 			    
 				Edge cur_edge(cur_nodes_id[first_node], cur_nodes_id[second_node]);
 				
-				auto elem = *List_edge.find(cur_edge); //!!! Если такого ребра нет, то find вернет end(),
-				                                       //!!! при разыменовании которого поведение не опеределно (НЕ ИСПРАВЛЕНО)
+				auto elem = List_edge.find(cur_edge);
 				
 				//not found
-				if (elem == *List_edge.end()) { //!!! "Разыменовать end()" - это что за ребро такое? С чем сравниваете? (НЕ ИСПРАВЛЕНО)
+				if (elem == List_edge.end()) {
 					Node new_node = get_middle_node(cur_edge);
 					new_node.m_flag = 1;
 					m_nodes.push_back(new_node);
 					cur_nodes_id.push_back(new_node.m_node_id);
-					List_edge.insert(elem);
-					elem.m_middle_node = new_node.m_node_id;
+					cur_edge.update_mid(new_node.m_node_id);
+					List_edge.insert(*elem);
 				}
 				else {
-					fin_elem.m_node_id.push_back(elem.m_middle_node);
+					fin_elem.m_node_id.push_back(elem->m_middle_node);
 				}
 			}
 	}
@@ -197,12 +216,11 @@ void MeshLoader::insert_middle(int p_element_id)
 				
 				Edge cur_edge(cur_nodes_id[first_node], cur_nodes_id[second_node]);
 				
-				auto elem = *List_edge.find(cur_edge); //!!! Если такого ребра нет, то find вернет end(),
-				                                       //!!! при разыменовании которого поведение не опеределно (НЕ ИСПРАВЛЕНО)
-				                                       
+				auto elem = List_edge.find(cur_edge); 
+
 				//found
-				if (elem != *List_edge.end()) {               //!!! Как можно end() разыменовать?
-					bound_elem.m_node_id.push_back(elem.m_middle_node);
+				if (elem != List_edge.end()) {
+					bound_elem.m_node_id.push_back(elem->m_middle_node);
 				}
 			}
 	}
@@ -257,14 +275,4 @@ Node MeshLoader::get_middle_node(const Edge& cur_edge)
 	Node new_node(m_nodes.size() + 1, get_middle_of_edge(cur_edge), 1);
 
 	return new_node;
-}
-
-FiniteElement& MeshLoader::operator[](int k) {
-	auto elem = m_finite_elems.begin();
-	
-	//!!! Что тут за полный перебор??? ID КЭ известно и равно k
-	
-	while (elem->m_element_id != k)
-		elem++;
-	return *elem;
 }

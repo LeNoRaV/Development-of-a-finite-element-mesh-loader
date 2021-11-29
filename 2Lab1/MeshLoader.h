@@ -32,7 +32,8 @@ public:
 
 	std::set<int> get_node_by_boundary(int p_boundary_id) const; 
 	std::set<int> get_node_by_finite(int p_material_id) const;
-	std::set<FiniteElement> get_f_node_by_boundary(int p_boundary_id) const; //get FiniteElement
+	std::set<int> get_f_node_by_boundary(int p_boundary_id) const; //get FiniteElement
+	std::set<FiniteElement> get_f_node_by_boundary_task(int p_boundary_id) const;
 	
 	void insert_middle(int p_element_id);
 	std::vector<std::set<int>> get_adjacent_nodes()const;
@@ -40,6 +41,4 @@ public:
 	friend std::ostream& operator << (std::ostream&, const std::vector<Node>&);
 	friend std::ostream& operator << (std::ostream&, const std::vector<FiniteElement>&);
 	friend std::ostream& operator << (std::ostream&, const std::vector<BoundaryFiniteElement>&);
-
-	FiniteElement& operator[](int k);
 };

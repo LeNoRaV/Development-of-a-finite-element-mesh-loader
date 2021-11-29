@@ -73,3 +73,7 @@ public:
 	};
 };
 
+namespace std {
+	std::ostream& operator << (std::ostream& out, const std::vector <int>& elem);
+}
+
