@@ -32,7 +32,7 @@ void Triangle_with_angle_less_then_30(const MeshLoader& My, const std::string& f
 	if (!file.is_open()) 
 		throw FileIsNotFound(filename);
 	else {
-	     auto good_f_elem = [&](FiniteElement f_elem) { 
+	     auto good_f_elem = [&](FiniteElement f_elem) { //!!! Почему f_elem передается по значению?
             auto good_angle = [&](int node1, int node2, int node3) {
                 double AB = sqrt((My.get_node()[node1].m_XYZ.at(0) - My.get_node()[node2].m_XYZ.at(0)) * (My.get_node()[node1].m_XYZ.at(0) - My.get_node()[node2].m_XYZ.at(0)) +
                     (My.get_node()[node1].m_XYZ.at(1) - My.get_node()[node2].m_XYZ.at(1)) * (My.get_node()[node1].m_XYZ.at(1) - My.get_node()[node2].m_XYZ.at(1)) +
@@ -54,11 +54,12 @@ void Triangle_with_angle_less_then_30(const MeshLoader& My, const std::string& f
             return good_angle(f_elem.m_node_id.at(0), f_elem.m_node_id.at(1), f_elem.m_node_id.at(2));
         };
 
-        auto transform = [&](FiniteElement f_elem) {
-            return My.get_finite_elems()[f_elem.m_element_id].m_node_id;
+        auto transform = [&](FiniteElement f_elem) { //!!! Почему f_elem передается по значению?
+            return My.get_finite_elems()[f_elem.m_element_id].m_node_id; //!!! ЗАЧЕМ ИСКАТЬ ЭЛЕМЕНТ, ЕСЛИ СПИСОК ЕГО УЗЛОВ ВНУТРИ f_elem?
         };
         auto res = Container | std::ranges::views::filter(good_f_elem) | std::ranges::views::transform(transform);
         std::ranges::copy(res, std::ostream_iterator<std::vector<int>>(file, "\n"));
+        //!!! Не нашел перегрузки << для std::vector<int>
 	}
 }
 
